@@ -51,3 +51,4 @@ dax_df['Close'].plot(title='DAX Stock Price')#
 
 def stock_return():
     
+    
