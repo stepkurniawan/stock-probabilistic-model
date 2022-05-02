@@ -5,6 +5,7 @@ Created on Mon May  2 21:24:58 2022
 @author: steph
 """
 
+import numpy as np
 import pandas as pd
 import yfinance as yf
 from yahoofinancials import YahooFinancials
@@ -49,6 +50,15 @@ dax_df = ticker.history(start='1991-01-01',
 dax_df['Close'].plot(title='DAX Stock Price')#
 
 
-def stock_return():
+def stock_return(arr):
+    r = np.array(1)
     
+    for i in range(1, len(arr['Close'])):
+        r_t = 100*np.log(arr['Close'][i] / arr['Close'][i-1])
+        # print(r_t)
+        
+    np.append(r, r_t) # TODO fix this
+    return r
+
+print(stock_return(dax_df))
     
