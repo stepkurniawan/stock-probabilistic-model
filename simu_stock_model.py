@@ -28,7 +28,7 @@ num_stocks = 2
 num_state = 3
 
 #fix the random seed
-np.random.seed(0)
+# np.random.seed(0)
 
 # b : drift for each stocks, for each state
 # ex: b[0,1] is drift for stock 0 and state 1
@@ -45,7 +45,7 @@ for i in range(num_stocks):
             b[i,j] = np.random.normal(b[i,j-1] +1, 0.5,1) 
 
 
-print(b)
+# print(b)
 
 # volatility
 # create 3 matrix of dxd matrix
@@ -61,3 +61,19 @@ P_1 = [[0.3, 0.4, 0.3],
 P_2 = [[0.2, 0.6, 0.2],
        [0.01, 0.9, 0.09],
        [0.4, 0.3, 0.3]]
+
+# simulate y : state
+# y0 = first state : random between state 1,2,3
+# y[i,t] : stock i, and t time
+# ex: y[0,1] : state at stock 0 when time is in index 1.  
+
+y =[]
+
+for i in range(num_stocks):
+    for t in range(4):
+        if t == 0:
+            y[i,t] = np.random.randint(0,3)
+        else: 
+            y[i,t] = 
+        
+
