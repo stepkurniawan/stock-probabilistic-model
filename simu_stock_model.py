@@ -37,16 +37,19 @@ b = np.random.randn(num_stocks, num_state)
 # b0 < b1 < b2
 for i in range(num_stocks):
     for j in range(num_state):
-        if i == 0 and j == 0:
+        if j == 0:
             b[i,j] = np.random.randn(1)
         else: 
             # make sure b of the next state is larger than the one before
             # b0 (crisis period) < b1 (stable) < b2 (bubble periode)
             b[i,j] = np.random.normal(b[i,j-1] +1, 0.5,1) 
 
+
 print(b)
 
 # volatility
+# create 3 matrix of dxd matrix
+# for state 1 & 3 -> similar covariance matrix
 
 # transition matrixs 
 # P_1 : transition matrix for stock 1
