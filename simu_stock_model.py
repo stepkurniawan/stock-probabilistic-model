@@ -27,6 +27,9 @@ num_stocks = 2
 # state 0: crisis, state 1: stable, state 2: bubble
 num_state = 3
 
+# how many time
+N = 5
+
 #fix the random seed
 # np.random.seed(0)
 
@@ -45,35 +48,32 @@ for i in range(num_stocks):
             b[i,j] = np.random.normal(b[i,j-1] +1, 0.5,1) 
 
 
-# print(b)
+print("drift matrix",b)
 
 # volatility
 # create 3 matrix of dxd matrix
 # for state 1 & 3 -> similar covariance matrix
 
 # transition matrixs 
-# P_1 : transition matrix for stock 1
-# P_2 : transition matrix for stock 2
-P_1 = [[0.3, 0.4, 0.3],
-       [0.1, 0.9, 0.0],
-       [0.4, 0.3, 0.3]]
+# P [stock][from state][to state]
+P = [[0.3, 0.4, 0.3], [0.1, 0.9, 0.0], [0.4, 0.3, 0.3]], \
+    [[0.2, 0.6, 0.2], [0.01, 0.9, 0.09], [0.4, 0.3, 0.3]]
 
-P_2 = [[0.2, 0.6, 0.2],
-       [0.01, 0.9, 0.09],
-       [0.4, 0.3, 0.3]]
-
-# simulate y : state
-# y0 = first state : random between state 1,2,3
+# simulate y : state matrix
+# t = 0 : first state : random between state 1,2,3
 # y[i,t] : stock i, and t time
 # ex: y[0,1] : state at stock 0 when time is in index 1.  
 
-y =[]
+y = np.zeros((num_stocks, N))
 
 for i in range(num_stocks):
-    for t in range(4):
+    for t in range(N):
         if t == 0:
             y[i,t] = np.random.randint(0,3)
         else: 
-            y[i,t] = 
+            prev_state = int(y[i, t-1])
+            y[i,t] = np.random.choice( np.arange(0,3), p=[P[i][prev_state][0], \
+                                                          P[i][prev_state][1], \
+                                                          P[i][prev_state][2]] )
         
-
+print("state matrix", y)
