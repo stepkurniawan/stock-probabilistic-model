@@ -51,6 +51,8 @@ for i in range(num_stocks):
 print("drift matrix",b)
 
 # volatility
+sigma = [np.float32([[1, 0.5 if x != 1 else 0.2], [0.5 if x != 1 else 0.2, 1]]) for x in range(num_state)]
+sigma
 # create 3 matrix of dxd matrix
 # for state 1 & 3 -> similar covariance matrix
 
