@@ -28,7 +28,7 @@ num_stocks = 2
 num_state = 3
 
 # how many time (index of time)
-N = 5
+N = 50
 
 #fix the random seed
 # np.random.seed(0)
@@ -82,11 +82,13 @@ for i in range(num_stocks):
             y[i,t] = np.random.choice( np.arange(0,3), p=[P[i][prev_state][0], \
                                                           P[i][prev_state][1], \
                                                           P[i][prev_state][2]] )
-        
+y = y.astype('int') # state is always integer
 print("state matrix", y)
 
 # DELTA of BROWNIAN MOTION
 # 1 stock have 1 brownian motion
+# the length of 1 brownian motion is N
+# brownian motion have dim(num_stock, N)
 
 brownian_motion_delta = np.zeros((num_stocks, N))
 for j in range(num_stocks): 
@@ -96,12 +98,13 @@ for j in range(num_stocks):
 # r : rate of Return of stock price from timme 0 to time t
 r = np.zeros((num_stocks, N))
 for i in range(num_stocks):
-    for n in range(N):
+    for n in range(1,N+1):
         sum_b = 0
         sum_sigma = 0
-        for t in range(n+1):
-            sum_b = b[t]
-            r[i][t] = 
-
-for i in range(2):
-    print(i)
+        for t in range(n):
+            state_now = y[i,t]
+            sum_b = sum_b + b[i , state_now]
+            for d in range(num_stocks):
+                sum_sigma = sum_sigma + (sigma[state_now][i][d] * brownian_motion_delta[i, t])
+            r[i,t] = sum_b + sum_sigma
+print("return matrix", r)
