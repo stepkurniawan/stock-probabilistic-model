@@ -13,6 +13,8 @@ before testing using MCMCs
 import numpy as np
 import pandas as pd
 
+##############################################################################
+### VARIABLES ###
 # drift = normal distribution(mean, sigma)
 # dim(drift) = [stock] [state] 
 # list of mean of stocks : [stock1, stock2]
@@ -32,7 +34,7 @@ N = 50
 
 #fix the random seed
 # np.random.seed(0)
-
+#############################################################################
 # b : drift for each stocks, for each state
 # ex: b[0,1] is drift for stock 0 and state 1
 b = np.random.randn(num_stocks, num_state)
@@ -108,3 +110,16 @@ for i in range(num_stocks):
                 sum_sigma = sum_sigma + (sigma[state_now][i][d] * brownian_motion_delta[i, t])
             r[i,t] = sum_b + sum_sigma
 print("return matrix", r)
+
+# Price matrix S
+# dimension: number_of_stock x N times
+# ex: S[0,1] : stock 0 , time 1
+S = np.zeros((num_stocks, N))
+for i in range(num_stocks):
+    for n in range(N):
+        if n == 0:
+            S[i,n] = np.random.randint(50,100)
+        else:
+            S[i,n] = S[i, n-1]*r[i,n]
+print("price matrix", S)
+
