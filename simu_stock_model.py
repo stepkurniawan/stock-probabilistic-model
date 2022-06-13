@@ -20,7 +20,8 @@ import pandas as pd
 # list of mean of stocks : [stock1, stock2]
 mean_stocks = [0,0]
 # list of sigma of stocks : [stock1, stock2]
-sigma_stock = [0,0]
+sigma_stocks = []
+sigma_states_elements = [0.5, 0.2, 0.5]
 
 # randomly generated 2 stocks
 num_stocks = 2
@@ -53,13 +54,13 @@ for j in range(num_stocks):
 print("drift matrix",b)
 
 # volatility
-sigma = [
-    np.full((num_stocks, num_stocks), 0.2 if x == 1 else 0.5, dtype=np.float32)
+sigma_stocks = [
+    np.full((num_stocks, num_stocks), sigma_states_elements[x], dtype=np.float32)
     for x in range(num_state)
 ]
-for x in sigma:
+for x in sigma_stocks:
     np.fill_diagonal(x, 1)
-sigma
+
 # create 3 matrix of dxd matrix
 # for state 1 & 3 -> similar covariance matrix
 
