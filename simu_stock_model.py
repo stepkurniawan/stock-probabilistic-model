@@ -93,9 +93,10 @@ print("state matrix", y)
 # the length of 1 brownian motion is N
 # brownian motion have dim(num_stock, N)
 
-brownian_motion_delta = np.zeros((num_stocks, N))
-for j in range(num_stocks): 
-    brownian_motion_delta[j] = np.random.standard_normal(N)
+# brownian_motion_delta = np.zeros((num_stocks, N))
+# for j in range(num_stocks): 
+#     brownian_motion_delta[j] = np.random.standard_normal(N)
+brownian_motion_delta = np.array([np.random.standard_normal(N) for _ in range(num_stocks)])
     
 
 # r : rate of Return of stock price from timme 0 to time t
