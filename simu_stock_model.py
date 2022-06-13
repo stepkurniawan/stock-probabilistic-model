@@ -87,7 +87,7 @@ for i in range(num_stocks):
 y = y.astype('int') # state is always integer
 print("state matrix", y)
 
-# DELTA of BROWNIAN MOTION
+# DELTA of BROWNIAN MOTION is a normal distribution of mean 0 and std 1
 # 1 stock have 1 brownian motion
 # the length of 1 brownian motion is N
 # brownian motion have dim(num_stock, N)
