@@ -109,7 +109,7 @@ for i in range(num_stocks):
             state_now = y[i,t]
             sum_b = sum_b + b[i , state_now]
             for d in range(num_stocks):
-                sum_sigma = sum_sigma + (sigma[state_now][i][d] * brownian_motion_delta[i, t])
+                sum_sigma = sum_sigma + (sigma_stocks[state_now][i][d] * brownian_motion_delta[i, t])
             r[i,t] = sum_b + sum_sigma
 print("return matrix", r)
 
