@@ -12,18 +12,23 @@ before testing using MCMCs
 
 import numpy as np
 import pandas as pd
-
+import pystan
+import io
+import arviz as az
 ##############################################################################
 ### VARIABLES ###
-# drift = normal distribution(mean, sigma)
-# dim(drift) = [stock] [state] 
-# list of mean of stocks : [stock1, stock2]
-mean_stocks = [0,0]
-# list of sigma of stocks : [stock1, stock2]
-sigma_stock = [0,0]
 
 # randomly generated 2 stocks
 num_stocks = 2
+
+# drift = normal distribution(mean, sigma)
+# dim(drift) = [stock] [state] 
+# list of mean of stocks : [stock1, stock2]
+mean_stocks = np.zeros(num_stocks)
+# list of sigma of stocks : [stock1, stock2]
+sigma_stock = np.zeros(num_stocks)
+
+
 
 # we have 3 states: 
 # state 0: crisis, state 1: stable, state 2: bubble
@@ -123,3 +128,61 @@ for i in range(num_stocks):
             S[i,n] = S[i, n-1]*r[i,n]
 print("price matrix", S)
 
+
+#%% MCMC PyMC work in progress
+##############################################################################
+# MCMC PyMC
+
+from pymc3 import Model, Normal, Uniform
+
+with Model() as radon_model:
+    
+    μ = Normal('μ', mu=0, sd=10)
+    σ = Uniform('σ', 0, 10)
+    
+
+
+# %% MCMC Stan deprecated
+# ###########################################################################
+# MCMC Stan
+
+model_string = """
+data {
+  int<lower=1> num_stocks;
+  int<lower=1> N;
+  real prices[num_stocks, N];
+}
+transformed data {
+  real x_r[0];
+  int x_i[1] = { N };
+}
+parameters {
+  real<lower=0> b[3];
+  real<lower=0> sigma[3];
+  real P[3,3];                                  // transition matrix
+  real<lower=1, upper=3> y0[2];         // first state
+  real<lower=1, upper=3> y[num_stocks, N];  
+}
+model {
+  //priors
+  b ~ normal(1, 1);
+  sigma ~ normal(0,1);
+  covariance_mat ~ wishart(nu, Sigma)
+  P ~ dirichlet(alpha)
+  Y0 ~ unifrom (1,3)
+  
+  //sampling distribution
+  //col(matrix x, int n) - The n-th column of matrix x. Here the number of infected people 
+  cases ~ neg_binomial_2(col(to_matrix(y), 2), phi);
+}
+generated quantities {
+  real R0 = beta / gamma;
+  real recovery_time = 1 / gamma;
+  real pred_cases[n_days];
+  pred_cases = neg_binomial_2_rng(col(to_matrix(y), 2), phi);
+}"""
+
+model_test = pystan.StanModel(io.StringIO(model_string)) #compiling the model
+
+
+ # %%
