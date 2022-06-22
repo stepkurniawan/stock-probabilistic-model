@@ -17,6 +17,13 @@ import io
 import arviz as az
 ##############################################################################
 ### VARIABLES ###
+# drift = normal distribution(mean, sigma)
+# dim(drift) = [stock] [state] 
+# list of mean of stocks : [stock1, stock2]
+mean_stocks = [0,0]
+# list of sigma of stocks : [stock1, stock2]
+sigma_stocks = []
+sigma_states_elements = [0.5, 0.2, 0.5]
 
 # randomly generated 2 stocks
 num_stocks = 2
@@ -58,13 +65,13 @@ for j in range(num_stocks):
 print("drift matrix",b)
 
 # volatility
-sigma = [
-    np.full((num_stocks, num_stocks), 0.2 if x == 1 else 0.5, dtype=np.float32)
+sigma_stocks = [
+    np.full((num_stocks, num_stocks), sigma_states_elements[x], dtype=np.float32)
     for x in range(num_state)
 ]
-for x in sigma:
+for x in sigma_stocks:
     np.fill_diagonal(x, 1)
-sigma
+
 # create 3 matrix of dxd matrix
 # for state 1 & 3 -> similar covariance matrix
 
@@ -97,9 +104,10 @@ print("state matrix", y)
 # the length of 1 brownian motion is N
 # brownian motion have dim(num_stock, N)
 
-brownian_motion_delta = np.zeros((num_stocks, N))
-for j in range(num_stocks): 
-    brownian_motion_delta[j] = np.random.standard_normal(N)
+# brownian_motion_delta = np.zeros((num_stocks, N))
+# for j in range(num_stocks): 
+#     brownian_motion_delta[j] = np.random.standard_normal(N)
+brownian_motion_delta = np.array([np.random.standard_normal(N) for _ in range(num_stocks)])
     
 
 # r : rate of Return of stock price from timme 0 to time t
@@ -112,7 +120,7 @@ for i in range(num_stocks):
             state_now = y[i,t]
             sum_b = sum_b + b[i , state_now]
             for d in range(num_stocks):
-                sum_sigma = sum_sigma + (sigma[state_now][i][d] * brownian_motion_delta[i, t])
+                sum_sigma = sum_sigma + (sigma_stocks[state_now][i][d] * brownian_motion_delta[i, t])
             r[i,t] = sum_b + sum_sigma
 print("return matrix", r)
 
